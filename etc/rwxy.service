@@ -1,0 +1,13 @@
+[Unit]
+Description=RWXY
+After=network.target
+
+[Service]
+User=nimb
+WorkingDirectory=/opt/rwxy
+ExecStart=/usr/bin/python3 rwxy.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
