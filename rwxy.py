@@ -232,8 +232,9 @@ def _begin_timebox_help(prefix, command):
         f'Usage: {prefix}{command} [MINUTES] SUMMARY.  '
         f'Example #1: {prefix}{command} Write new blog post.  '
         f'Example #2: {prefix}{command} 45 Review article.  '
-        'Start a new timebox for the specified number of minutes.  '
-        'If duration is not specified, default to 30 minutes.'
+        'Start a new timebox for the specified number of MINUTES.  '
+        'MINUTES must be a multiple of 5 between 15 and 60, inclusive.  '
+        'If MINUTES is not specified, default to 30 minutes.'
     ]
 
 
@@ -244,7 +245,7 @@ def _cancel_timebox(prefix, sender, command, params, _reply_to):
 
     timeboxes = _ctx.state['timebox'].get(sender)
     if timeboxes is None or timeboxes[-1]['completed']:
-        return ['Error: No running timeboxes found.']
+        return [f'Error: No running timeboxes found for {sender}.']
 
     cancelled_timebox = timeboxes[-1]
     del timeboxes[-1]
@@ -265,7 +266,7 @@ def _delete_timebox(prefix, sender, command, params, _reply_to):
 
     timeboxes = _ctx.state['timebox'].get(sender)
     if timeboxes is None:
-        return ['Error: No timeboxes found.']
+        return [f'Error: No timeboxes found for {sender}.']
 
     if not timeboxes[-1]['completed']:
         return ['Warning: Another timebox is in progress: ' +
@@ -317,11 +318,11 @@ def _list_completed_timeboxes(prefix, sender, command, params, _reply_to):
 
     timeboxes = _ctx.state['timebox'].get(sender)
     if timeboxes is None:
-        return ['No timeboxes found.']
+        return [f'No timeboxes found for {sender}.']
 
     completed = [t for t in timeboxes if t['completed']]
     if len(completed) == 0:
-        return ['No timeboxes found.']
+        return [f'No completed timeboxes found for {sender}.']
 
     completed.sort(key=lambda x: x['start'], reverse=True)
     return [_format_timebox(t) for t in completed]
