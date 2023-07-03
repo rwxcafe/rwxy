@@ -371,15 +371,7 @@ def _current_time_help(prefix, command):
     return [f'Usage: {prefix}{command}.  Show current UTC time.']
 
 
-def _format_timebox(timebox):
-    person = timebox['person']
-    start = timebox['start']
-    duration = timebox['duration']
-    summary = timebox['summary']
-    start_str = time.strftime('%H:%M %Z', time.gmtime(start))
-    return f'{person} [{start_str}] ({duration} min) {summary}'
-
-
+# Tasks.
 def _complete_timeboxes(sock):
     current_time = int(time.time())
     for timeboxes in _ctx.state['timebox'].values():
@@ -430,6 +422,15 @@ def _remove_prefix(word, prefix):
     if word.startswith(prefix):
         return word[len(prefix):]
     return word
+
+
+def _format_timebox(timebox):
+    person = timebox['person']
+    start = timebox['start']
+    duration = timebox['duration']
+    summary = timebox['summary']
+    start_str = time.strftime('%H:%M %Z', time.gmtime(start))
+    return f'{person} [{start_str}] ({duration} min) {summary}'
 
 
 # Protocol functions
