@@ -52,7 +52,8 @@ clean:
 
 service: rmservice
 	adduser --system --group --home / rwxy
-	chown -R rwxy:rwxy .
+	mkdir -p /opt/data/rwxy/
+	chown -R rwxy:rwxy . /opt/data/rwxy/
 	chmod 600 rwxy.json
 	systemctl enable "$$PWD/etc/rwxy.service"
 	systemctl daemon-reload
@@ -65,5 +66,10 @@ rmservice:
 	systemctl daemon-reload
 	-deluser rwxy
 	@echo Done; echo
+
+pull-backup:
+	mkdir -p ~/bkp/
+	ssh splnx.net "tar -czf - -C /opt/data/ rwxy/" > ~/bkp/rwxy-$$(date "+%Y-%m-%d_%H-%M-%S").tgz
+	ls -lh ~/bkp/
 
 FORCE:
