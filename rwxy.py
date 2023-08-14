@@ -74,6 +74,7 @@ def _run(host, port, tls,
             sender, command, middle, trailing = _parse_line(line)
             if command == 'PING':
                 _send(sock, f'PONG :{trailing}')
+                _ctx.retry_delay = 1
             elif command == 'PRIVMSG':
                 _log.info(
                     'sender: %s; command: %s; middle: %s; trailing: %s',
@@ -85,7 +86,6 @@ def _run(host, port, tls,
                                          sender, middle, trailing)
                     except Exception:
                         _log.exception('Command processor encountered error')
-            _ctx.retry_delay = 1
         try:
             _complete_timeboxes(sock)
             _clean_timeboxes()
@@ -330,7 +330,7 @@ def _list_completed_timeboxes(prefix, sender, command, params, _reply_to):
 
 def _list_completed_timeboxes_help(prefix, command):
     return [
-        f'Usage: {prefix}{command}.  List your completed timeboxes. '
+        f'Usage: {prefix}{command}.  List your completed timeboxes.  '
         'Only your most recent 10 timeboxes started within the last 48 hours '
         'are available.  '
         'Older timeboxes are permanently removed from the system.'
